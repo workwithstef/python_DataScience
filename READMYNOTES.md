@@ -68,3 +68,4 @@ function_name = lambda 'parameter': 'operation on parameter'
 - Lambda syntax for if-statements:
 
 'RETURN IF STATEMENT IS TRUE' if 'IF STATEMENT' else 'RETURN IF STATEMENT IS FALSE'
+
