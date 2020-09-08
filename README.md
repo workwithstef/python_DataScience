@@ -2,6 +2,7 @@
 
 ## Topics
 
+- Data Analysis with Pandas
 - Data Visualisation
 - Statistics with NumPy
 - Hypothesis Testing with SciPy
