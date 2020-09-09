@@ -297,3 +297,90 @@ df.pivot(
 )
 ```
 *(Still follow up with .reset_index() to clean up indexing)*
+
+#### Multiple Tables
+
+
+- .merge() == INNER JOIN 
+
+The .merge() method is very powerful. It looks for common columns between the DFs and joins to the DFs together, any resultant duplicates are automatically reduced to a single column.
+
+Syntax: 
+
+```buildoutcfg
+joined_df = pd.merge(df1, df2)
+```
+*(Only used for merging TWO DFs together)*
+
+Individual DFs can directly merge with other DFs as well.
+
+Ex. 
+
+```buildoutcfg
+orders = pd.read_csv('orders.csv')
+
+orders_customers = orders.merge(customers)
+```
+This way is useful for 'chaining' multiple merges
+
+Ex. 
+
+```buildoutcfg
+all_data = pd.merge(men_women, sales).merge(targets)
+```
+
+POTENTIAL PROBLEM: Since merge automatically merges at columns with the same name, 'id' in Products and 'id' in Orders would be merged; which isn't ideal.
+
+SOLUTION 1: Rename column.
+```buildoutcfg
+orders_products = pd.merge(
+  orders, products.rename(columns={'id':'product_id'})
+)
+```
+
+SOLUTION 2: SQL-style.
+
+- Using `left_on` `right_on` keywords, specifies where to merge DFs at.
+```buildoutcfg
+pd.merge(
+    orders,
+    customers,
+    left_on='customer_id',
+    right_on='id')
+```
+*Here the orders DF & customers DF merges at 'customer_id' - 'id'*
+
+However, this solution will result with a DF with two 'id's, one for orders and one for customers. Pandas will automatically convert these to 'id_x' and 'id_y', respectively.
+
+Use keyword `suffixes` to specify the suffix for both resultant 'id's
+
+```buildoutcfg
+pd.merge(
+    orders,
+    customers,
+    left_on='customer_id',
+    right_on='id',
+    suffixes=['_order', '_customer']
+)
+```
+*Here the DFs are merged and each DFs 'id' is renamed 'id_order' & 'id_customer'*
+
+- OUTER JOIN == `.merge(df1, df2, how='outer')`
+*(Keyword --> how='outer')*
+
+*Outer merges include empty unmatched rows*
+
+- LEFT OUTER JOIN == `.merge(df1, df2, how='left')`
+
+- RIGHT OUTER JOIN == `.merge(df1, df2, how='right')`
+
+##### Concatenate DataFrames
+
+if two DFs have exactly the same columns you can quickly combine them using the .concat method
+
+Syntax: 
+
+```buildoutcfg
+menu = pd.concat([bakery, ice_cream])
+```
+*(The two DFs must be passed in as a list)*
